@@ -10,6 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuestionGame">
         <activity
+            android:name=".MainActivity2"
+            android:exported="true" />
+        <activity
+            android:name=".DifficultyActivity"
+            android:exported="true" />
+        <activity
+            android:name=".Difficulty_Activity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
