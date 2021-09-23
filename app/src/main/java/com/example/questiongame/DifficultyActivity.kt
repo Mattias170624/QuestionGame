@@ -1,5 +1,6 @@
 package com.example.questiongame
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -20,16 +21,37 @@ open class DifficultyActivity : AppCompatActivity(), View.OnClickListener {
         button2.setOnClickListener(this)
         button3.setOnClickListener(this)
 
-        val subject = intent.getIntExtra("subject", 0)
-        Log.d("!!!activity2", "Selected subject = $subject")
-
     }
 
     override fun onClick(buttonPressed: View) {
+
         when (buttonPressed.id) {
-            R.id.button1 -> Log.d("!!!activity2", "knapp 1")
-            R.id.button2 -> Log.d("!!!activity2", "knapp 2")
-            R.id.button3 -> Log.d("!!!activity2", "knapp 3")
+            R.id.button1 -> {
+                DataManager.difficulty = 1
+                showButtonStart()
+            }
+            R.id.button2 -> {
+                DataManager.difficulty = 2
+                showButtonStart()
+            }
+            R.id.button3 -> {
+                DataManager.difficulty = 3
+                showButtonStart()
+            }
+            R.id.buttonStart -> {
+                startGameActivity()
+            }
         }
+    }
+
+    open fun showButtonStart() {
+        val buttonStart = findViewById<Button>(R.id.buttonStart)
+        buttonStart.visibility = View.VISIBLE
+        buttonStart.setOnClickListener(this)
+    }
+
+    open fun startGameActivity() {
+        val intent = Intent(this@DifficultyActivity, GameActivity::class.java)
+        startActivity(intent)
     }
 }

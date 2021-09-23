@@ -2,12 +2,14 @@ package com.example.questiongame
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
 
 open class MainActivity : AppCompatActivity(), View.OnClickListener {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,17 +30,31 @@ open class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(buttonPressed: View) {
         when (buttonPressed.id) {
-            R.id.button1 -> startDifficultyActivity(subject = 1)
-            R.id.button2 -> startDifficultyActivity(subject = 2)
-            R.id.button3 -> startDifficultyActivity(subject = 3)
-            R.id.button4 -> startDifficultyActivity(subject = 4)
-            R.id.button5 -> startDifficultyActivity(subject = (1..4).random())
+            R.id.button1 -> {
+                DataManager.subject = 1
+                startDifficultyActivity()
+            }
+            R.id.button2 -> {
+                DataManager.subject = 2
+                startDifficultyActivity()
+            }
+            R.id.button3 -> {
+                DataManager.subject = 3
+                startDifficultyActivity()
+            }
+            R.id.button4 -> {
+                DataManager.subject = 4
+                startDifficultyActivity()
+            }
+            R.id.button5 -> {
+                DataManager.subject = (1..5).random()
+                startDifficultyActivity()
+            }
         }
     }
 
-    open fun startDifficultyActivity(subject: Int) {
+    open fun startDifficultyActivity() {
         val intent = Intent(this@MainActivity, DifficultyActivity::class.java)
-        intent.putExtra("subject", subject)
         startActivity(intent)
     }
 }
