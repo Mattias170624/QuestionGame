@@ -9,53 +9,62 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.questiongame.DataManager.difficulty
 import com.example.questiongame.DataManager.subject
 
-class GameActivity : AppCompatActivity() {
+open class GameActivity : AppCompatActivity() {
+
+    var number1: Int = 0
+    var number2: Int = 0
+    var sum: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        var questionTextView: TextView = findViewById(R.id.questionTextView)
-        var answerEditText = findViewById<EditText>(R.id.answerEditText)
-        var button = findViewById<Button>(R.id.button)
+        val questionTextView: TextView = findViewById(R.id.questionTextView)
+        val answerEditText: EditText = findViewById(R.id.answerEditText)
+        val button = findViewById<Button>(R.id.button)
 
 
         button.setOnClickListener() {
-            Log.d("!!!", "Start button pressed")
-            questionTextView.text = questionGenerator()
             button.text = "Submit!"
+
+            questionTextView.text = questionGenerator()
         }
     }
 
-    private fun questionGenerator(): String {
-        var number1: Int = 0
-        var number2: Int = 0
-
+    open fun subjectProperties() {
         when (subject) {
-            1 -> subject = "+"
-            2 -> subject = "-"
-            3 -> subject = "*"
-            4 -> subject = "/"
+            1 -> {
+                subject = "+"
+                sum = (number1.plus(number2))
+            }
+            2 -> {
+                subject = "-"
+                sum = (number1.minus(number2))
+            }
+            3 -> {
+                subject = "*"
+                sum = (number1.times(number2))
+            }
+            4 -> {
+                subject = "/"
+                sum = (number1.div(number2))
+            }
         }
+    }
 
+    open fun difficultyProperties() {
         when (difficulty) {
-
             1 -> {
                 if (subject == "+" || subject == "-") {
+                    var sum = (number1.plus(number2))
                     number1 = (50..100).random()
                     number2 = (50..100).random()
                 } else if (subject == "*") {
                     number1 = (3..9).random()
                     number2 = (3..9).random()
                 } else {
-                    number1 = ((2..(30) / 2).random() * 2) // number1 gets assigned an even number
-                    val listNum = mutableListOf<Int>()
-                    for (num in 2..number1 / 2) {
-                        if (number1 % num == 0) { // Primenumber check for number2
-                            listNum.add(num) // Adds primenumber to numList
-                            number2 = listNum.random()
-                        }
-                    }
+                    number1 = ((4..(40) / 2).random() * 2)
+                    primeNumberMaker()
                 }
             }
 
@@ -64,41 +73,46 @@ class GameActivity : AppCompatActivity() {
                     number1 = (100..200).random()
                     number2 = (100..200).random()
                 } else if (subject == "*") {
-                    number1 = (4..15).random()
-                    number2 = (4..15).random()
+                    number1 = (5..12).random()
+                    number2 = (5..12).random()
                 } else {
-                    number1 = ((4..(60) / 2).random() * 2) // number1 gets assigned an even number
-                    val listNum = mutableListOf<Int>()
-                    for (num in 4..number1 / 2) {
-                        if (number1 % num == 0) { // Primenumber check for number2
-                            listNum.add(num) // Adds primenumber to numList
-                            number2 = listNum.random()
-                        }
-                    }
+                    number1 = ((4..(60) / 2).random() * 2)
+                    primeNumberMaker()
                 }
             }
 
             3 -> {
                 if (subject == "+" || subject == "-") {
-                    number1 = (300..600).random()
-                    number2 = (300..600).random()
+                    number1 = (300..500).random()
+                    number2 = (300..500).random()
                 } else if (subject == "*") {
-                    number1 = (7..19).random()
-                    number2 = (7..19).random()
+                    number1 = (9..19).random()
+                    number2 = (9..19).random()
                 } else {
-                    number1 = ((8..(90) / 2).random() * 2) // number1 gets assigned an even number
-                    val listNum = mutableListOf<Int>()
-                    for (num in 4..number1 / 2) {
-                        if (number1 % num == 0) { // Primenumber check for number2
-                            listNum.add(num) // Adds primenumber to numList
-                            number2 = listNum.random()
-                        }
-                    }
+                    number1 = ((4..(90) / 2).random() * 2)
+                    primeNumberMaker()
                 }
             }
         }
+    }
+
+    private fun primeNumberMaker() {
+        val listNum = mutableListOf<Int>()
+        for (num in 2..number1 / 2) {
+            if (number1 % num == 0) {
+                listNum.add(num)
+                number2 = listNum.random()
+            }
+        }
+    }
+
+    private fun questionGenerator(): String {
+        subjectProperties()
+        difficultyProperties()
+
         return "$number1 $subject $number2"
     }
 }
+
 
 
