@@ -5,112 +5,75 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.questiongame.DataManager.difficulty
+import com.example.questiongame.DataManager.number1
+import com.example.questiongame.DataManager.number2
+import com.example.questiongame.DataManager.points
 import com.example.questiongame.DataManager.subject
+import com.example.questiongame.DataManager.sum
+import com.example.questiongame.R.id.questionTextView
+import com.example.questiongame.R.id.userInputEditText
 
 open class GameActivity : AppCompatActivity() {
 
-    var number1: Int = 0
-    var number2: Int = 0
-    var sum: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        val questionTextView: TextView = findViewById(R.id.questionTextView)
-        val answerEditText: EditText = findViewById(R.id.answerEditText)
+        val questionTextView: TextView = findViewById(questionTextView)
+        val userInput: EditText = findViewById(userInputEditText)
         val button = findViewById<Button>(R.id.button)
 
+        val duration = Toast.LENGTH_SHORT
+        val wrongText = "Wrong answer!"
+        val toast = Toast.makeText(applicationContext, wrongText, duration)
+        toast.setGravity(1, -225, 70) // Popup text location
+        userInput.requestFocus() // Keyboard focus on start
+
+        DataManager.subjectProperties()
+        questionTextView.text = questionGenerator()
 
         button.setOnClickListener() {
-            button.text = "Submit!"
-
-            questionTextView.text = questionGenerator()
+            answerChecker()
+            when (userInput.text.toString().contains("$sum")) {
+                true -> {
+                    questionTextView.text = questionGenerator()
+                    userInput.setText("")
+                    points++
+                }
+                false -> {
+                    userInput.setText("")
+                    toast.show()
+                    points--
+                }
+            }
+            Log.d("!","Total points: $points")
         }
     }
 
-    open fun subjectProperties() {
+    open fun questionGenerator(): String {
+        DataManager.difficultyProperties()
+
+        return "$number1 $subject $number2"
+    }
+
+    open fun sumOfNumbers(): Int {
         when (subject) {
-            1 -> {
-                subject = "+"
-                sum = (number1.plus(number2))
-            }
-            2 -> {
-                subject = "-"
-                sum = (number1.minus(number2))
-            }
-            3 -> {
-                subject = "*"
-                sum = (number1.times(number2))
-            }
-            4 -> {
-                subject = "/"
+            "+" -> sum = (number1.plus(number2))
+            "-" -> sum = (number1.minus(number2))
+            "*" -> sum = (number1.times(number2))
+            "/" -> {
+                Log.d("!","xxxxxxxx$number1 $number2 $sum")
                 sum = (number1.div(number2))
             }
         }
+        return sum
     }
 
-    open fun difficultyProperties() {
-        when (difficulty) {
-            1 -> {
-                if (subject == "+" || subject == "-") {
-                    var sum = (number1.plus(number2))
-                    number1 = (50..100).random()
-                    number2 = (50..100).random()
-                } else if (subject == "*") {
-                    number1 = (3..9).random()
-                    number2 = (3..9).random()
-                } else {
-                    number1 = ((4..(40) / 2).random() * 2)
-                    primeNumberMaker()
-                }
-            }
-
-            2 -> {
-                if (subject == "+" || subject == "-") {
-                    number1 = (100..200).random()
-                    number2 = (100..200).random()
-                } else if (subject == "*") {
-                    number1 = (5..12).random()
-                    number2 = (5..12).random()
-                } else {
-                    number1 = ((4..(60) / 2).random() * 2)
-                    primeNumberMaker()
-                }
-            }
-
-            3 -> {
-                if (subject == "+" || subject == "-") {
-                    number1 = (300..500).random()
-                    number2 = (300..500).random()
-                } else if (subject == "*") {
-                    number1 = (9..19).random()
-                    number2 = (9..19).random()
-                } else {
-                    number1 = ((4..(90) / 2).random() * 2)
-                    primeNumberMaker()
-                }
-            }
-        }
-    }
-
-    private fun primeNumberMaker() {
-        val listNum = mutableListOf<Int>()
-        for (num in 2..number1 / 2) {
-            if (number1 % num == 0) {
-                listNum.add(num)
-                number2 = listNum.random()
-            }
-        }
-    }
-
-    private fun questionGenerator(): String {
-        subjectProperties()
-        difficultyProperties()
-
-        return "$number1 $subject $number2"
+    open fun answerChecker() {
+        sumOfNumbers()
     }
 }
 
