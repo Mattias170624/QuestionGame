@@ -1,6 +1,9 @@
 package com.example.questiongame
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -12,8 +15,8 @@ import com.example.questiongame.DataManager.number2
 import com.example.questiongame.DataManager.points
 import com.example.questiongame.DataManager.subject
 import com.example.questiongame.DataManager.sum
-import com.example.questiongame.R.id.questionTextView
-import com.example.questiongame.R.id.userInputEditText
+import com.example.questiongame.R.id.*
+import java.util.*
 
 open class GameActivity : AppCompatActivity() {
 
@@ -24,32 +27,52 @@ open class GameActivity : AppCompatActivity() {
 
         val questionTextView: TextView = findViewById(questionTextView)
         val userInput: EditText = findViewById(userInputEditText)
-        val button = findViewById<Button>(R.id.button)
+        val button: Button = findViewById(R.id.button)
+        val clock: TextView = findViewById(clockTextView)
+        val pointsCounter: TextView = findViewById(pointCounterTextView)
 
         val duration = Toast.LENGTH_SHORT
         val wrongText = "Wrong answer!"
         val toast = Toast.makeText(applicationContext, wrongText, duration)
+        val gameTime: CountDownTimer
         toast.setGravity(1, -225, 70) // Popup text location
         userInput.requestFocus() // Keyboard focus on start
+        clock.text.toString()
 
         DataManager.subjectProperties()
         questionTextView.text = questionGenerator()
 
+        gameTime = object : CountDownTimer(31000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                clock.text = "${millisUntilFinished / 1000}"
+            }
+
+            override fun onFinish() {
+                Log.d("!", "You got: $points points")
+            }
+        }
+        gameTime.start()
+        points = 0 // Resets point value if user wants to change subject / difficulty
+
         button.setOnClickListener() {
-            answerChecker()
+            sumOfNumbers()
+            pointsCounter.text = "$points"
             when (userInput.text.toString().contains("$sum")) {
                 true -> {
-                    questionTextView.text = questionGenerator()
-                    userInput.setText("")
                     points++
+                    userInput.setText("")
+                    questionTextView.text = questionGenerator()
+                    if (points > 0) pointsCounter.setTextColor(Color.parseColor("#90ee90")) // Points color = green
+                    pointsCounter.text = "$points"
                 }
                 false -> {
+                    points--
                     userInput.setText("")
                     toast.show()
-                    points--
+                    if (points <= 0) pointsCounter.setTextColor(Color.parseColor("#FF0000")) // Points color = red
+                    pointsCounter.text = "$points"
                 }
             }
-            Log.d("!","Total points: $points")
         }
     }
 
@@ -64,16 +87,9 @@ open class GameActivity : AppCompatActivity() {
             "+" -> sum = (number1.plus(number2))
             "-" -> sum = (number1.minus(number2))
             "*" -> sum = (number1.times(number2))
-            "/" -> {
-                Log.d("!","xxxxxxxx$number1 $number2 $sum")
-                sum = (number1.div(number2))
-            }
+            "/" -> sum = (number1.div(number2))
         }
         return sum
-    }
-
-    open fun answerChecker() {
-        sumOfNumbers()
     }
 }
 

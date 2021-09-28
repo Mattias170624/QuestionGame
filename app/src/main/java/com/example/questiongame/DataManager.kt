@@ -1,8 +1,5 @@
 package com.example.questiongame
 
-import android.util.Log
-import kotlin.time.nanoseconds
-
 object DataManager { // Saved user data
     var subject: Any = 0
     var difficulty: Int = 0
