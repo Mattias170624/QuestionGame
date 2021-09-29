@@ -1,10 +1,9 @@
 package com.example.questiongame
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -42,15 +41,16 @@ open class GameActivity : AppCompatActivity() {
         DataManager.subjectProperties()
         questionTextView.text = questionGenerator()
 
-        gameTime = object : CountDownTimer(31000, 1000) {
+        gameTime = object : CountDownTimer(30000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 clock.text = "${millisUntilFinished / 1000}"
             }
 
             override fun onFinish() {
-                Log.d("!", "You got: $points points")
+                startEndScreenActivity()
             }
         }
+
         gameTime.start()
         points = 0 // Resets point value if user wants to change subject / difficulty
 
@@ -90,6 +90,11 @@ open class GameActivity : AppCompatActivity() {
             "/" -> sum = (number1.div(number2))
         }
         return sum
+    }
+
+    open fun startEndScreenActivity() {
+        val intent = Intent(this@GameActivity, EndScreenActivity::class.java)
+        startActivity(intent)
     }
 }
 
