@@ -6,47 +6,43 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 
-open class DifficultyActivity : AppCompatActivity(), View.OnClickListener {
+open class DifficultyActivity : AppCompatActivity() {
+
+    lateinit var button1: Button
+    lateinit var button2: Button
+    lateinit var button3: Button
+    lateinit var buttonStart: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_difficulty)
 
-        val button1 = findViewById<Button>(R.id.button1)
-        val button2 = findViewById<Button>(R.id.button2)
-        val button3 = findViewById<Button>(R.id.button3)
+        button1 = findViewById(R.id.button1)
+        button2 = findViewById(R.id.button2)
+        button3 = findViewById(R.id.button3)
+        buttonStart = findViewById(R.id.buttonStart)
 
-        button1.setOnClickListener(this)
-        button2.setOnClickListener(this)
-        button3.setOnClickListener(this)
+        button1.setOnClickListener {
+            DataManager.difficulty = 1
+            showButtonStart()
+        }
 
-    }
+        button2.setOnClickListener {
+            DataManager.difficulty = 2
+            showButtonStart()
+        }
 
-    override fun onClick(buttonPressed: View) {
-
-        when (buttonPressed.id) {
-            R.id.button1 -> {
-                DataManager.difficulty = 1
-                showButtonStart()
-            }
-            R.id.button2 -> {
-                DataManager.difficulty = 2
-                showButtonStart()
-            }
-            R.id.button3 -> {
-                DataManager.difficulty = 3
-                showButtonStart()
-            }
-            R.id.buttonStart -> {
-                startGameActivity()
-            }
+        button3.setOnClickListener {
+            DataManager.difficulty = 3
+            showButtonStart()
         }
     }
 
     open fun showButtonStart() {
-        val buttonStart = findViewById<Button>(R.id.buttonStart)
         buttonStart.visibility = View.VISIBLE
-        buttonStart.setOnClickListener(this)
+        buttonStart.setOnClickListener {
+            startGameActivity()
+        }
     }
 
     open fun startGameActivity() {

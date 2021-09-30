@@ -9,41 +9,31 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.questiongame.DataManager.number1
-import com.example.questiongame.DataManager.number2
-import com.example.questiongame.DataManager.points
-import com.example.questiongame.DataManager.subject
-import com.example.questiongame.DataManager.sum
-import com.example.questiongame.R.id.*
-import java.util.*
 
 open class GameActivity : AppCompatActivity() {
 
+    lateinit var questionTextView: TextView
+    lateinit var pointsCounter: TextView
+    lateinit var clock: TextView
+    lateinit var userInput: EditText
+    lateinit var button: Button
+    lateinit var gameTime: CountDownTimer
+    lateinit var toast: Toast
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        val questionTextView: TextView = findViewById(questionTextView)
-        val userInput: EditText = findViewById(userInputEditText)
-        val button: Button = findViewById(R.id.button)
-        val clock: TextView = findViewById(clockTextView)
-        val pointsCounter: TextView = findViewById(pointCounterTextView)
+        questionTextView = findViewById(R.id.questionTextView)
+        pointsCounter = findViewById(R.id.pointCounterTextView)
+        clock = findViewById(R.id.clockTextView)
+        userInput = findViewById(R.id.userInputEditText)
+        button = findViewById(R.id.button)
+        toast = Toast(this)
 
-        val duration = Toast.LENGTH_SHORT
-        val wrongText = "Wrong answer!"
-        val toast = Toast.makeText(applicationContext, wrongText, duration)
-        val gameTime: CountDownTimer
-        toast.setGravity(1, -225, 70) // Popup text location
-        userInput.requestFocus() // Keyboard focus on start
-        clock.text.toString()
-
-        DataManager.subjectProperties()
-        questionTextView.text = questionGenerator()
-
-        gameTime = object : CountDownTimer(30000, 1000) {
+        gameTime = object : CountDownTimer(31000, 1000) { // Game time starts
             override fun onTick(millisUntilFinished: Long) {
-                clock.text = "${millisUntilFinished / 1000}"
+                clock.text = "${millisUntilFinished / 1000}" // Converts ms to sec
             }
 
             override fun onFinish() {
@@ -51,50 +41,70 @@ open class GameActivity : AppCompatActivity() {
             }
         }
 
+        pointsCounter.text = "${DataManager.points}"
+        questionTextView.text = questionGenerator()
         gameTime.start()
-        points = 0 // Resets point value if user wants to change subject / difficulty
+        sumOfNumbers()
 
-        button.setOnClickListener() {
+        button.setOnClickListener {
+            DataManager.questions++
             sumOfNumbers()
-            pointsCounter.text = "$points"
-            when (userInput.text.toString().contains("$sum")) {
+            when (userInput.text.toString() == (DataManager.sum.toString())) {
                 true -> {
-                    points++
+                    DataManager.passedAttempts++
+                    DataManager.points++
                     userInput.setText("")
                     questionTextView.text = questionGenerator()
-                    if (points > 0) pointsCounter.setTextColor(Color.parseColor("#90ee90")) // Points color = green
-                    pointsCounter.text = "$points"
+                    if (DataManager.points > 0) pointsCounter.setTextColor(Color.parseColor("#90ee90")) // Points color = green
+                    pointsCounter.text = "${DataManager.points}"
                 }
                 false -> {
-                    points--
+                    DataManager.points--
+                    DataManager.failedAttempts++
                     userInput.setText("")
-                    toast.show()
-                    if (points <= 0) pointsCounter.setTextColor(Color.parseColor("#FF0000")) // Points color = red
-                    pointsCounter.text = "$points"
+                    toastTextRandomizer()
+                    if (DataManager.points <= 0) pointsCounter.setTextColor(Color.parseColor("#FF0000")) // Points color = red
+                    pointsCounter.text = "${DataManager.points}"
                 }
             }
         }
     }
 
     open fun questionGenerator(): String {
+        DataManager.subjectProperties()
         DataManager.difficultyProperties()
 
-        return "$number1 $subject $number2"
+        return "${DataManager.number1} ${DataManager.subject} ${DataManager.number2}"
     }
 
     open fun sumOfNumbers(): Int {
-        when (subject) {
-            "+" -> sum = (number1.plus(number2))
-            "-" -> sum = (number1.minus(number2))
-            "*" -> sum = (number1.times(number2))
-            "/" -> sum = (number1.div(number2))
+        when (DataManager.subject) {
+            "+" -> DataManager.sum = (DataManager.number1.plus(DataManager.number2))
+            "-" -> DataManager.sum = (DataManager.number1.minus(DataManager.number2))
+            "*" -> DataManager.sum = (DataManager.number1.times(DataManager.number2))
+            "/" -> DataManager.sum = (DataManager.number1.div(DataManager.number2))
         }
-        return sum
+        return DataManager.sum
+    }
+
+    open fun toastTextRandomizer() {
+        val toastList = mutableListOf<String>()
+        toastList.add("Terrible..")
+        toastList.add("Wow so bad")
+        toastList.add("Totally wrong!")
+        toastList.add("Very bad!")
+        toastList.add("Damn.. ")
+        toastList.add("Really bad")
+
+        toast = Toast.makeText(applicationContext, toastList.random(), Toast.LENGTH_SHORT)
+        toast.setGravity(0, 0, -200) // Position for toast on screen
+        toast.show()
     }
 
     open fun startEndScreenActivity() {
         val intent = Intent(this@GameActivity, EndScreenActivity::class.java)
         startActivity(intent)
+        toast.cancel()
     }
 }
 

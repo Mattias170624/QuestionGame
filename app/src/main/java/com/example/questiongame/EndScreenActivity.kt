@@ -1,14 +1,12 @@
 package com.example.questiongame
 
 import android.content.Intent
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
-import com.example.questiongame.DataManager.difficulty
-import com.example.questiongame.DataManager.points
-import com.example.questiongame.DataManager.subject
+import kotlin.math.roundToInt
 
 class EndScreenActivity : AppCompatActivity() {
 
@@ -17,8 +15,9 @@ class EndScreenActivity : AppCompatActivity() {
     lateinit var pointResult: TextView
     lateinit var subjectResult: TextView
     lateinit var difficultyResult: TextView
+    lateinit var attemptsText: TextView
+    lateinit var percentAttemptResult: TextView
     lateinit var playAgainButton: Button
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,47 +28,50 @@ class EndScreenActivity : AppCompatActivity() {
         pointResult = findViewById(R.id.pointResultTextView)
         subjectResult = findViewById(R.id.subjectTextView)
         difficultyResult = findViewById(R.id.difficultyTextView)
+        attemptsText = findViewById(R.id.attemptsTextView)
+        percentAttemptResult = findViewById(R.id.percentAttemptsTextView)
         playAgainButton = findViewById(R.id.playAgainButton)
 
-        headerChanger()
+        titleChanger() // Changes title based on point value
         resultProperties()
 
         playAgainButton.setOnClickListener {
+            DataManager.wipeData()
             val intent = Intent(this@EndScreenActivity, MainActivity::class.java)
             startActivity(intent)
         }
     }
 
-    private fun resultProperties() {
-        pointResult.text = "$points"
+    private fun percentAttemptsProperties() { // Success rate calculator
+        var percentNum = (DataManager.passedAttempts).toDouble() / (DataManager.questions) * 100
+        percentAttemptResult.text = "${percentNum.roundToInt()} % Correct guesses"
+        Log.d("!", "Passed: ${DataManager.passedAttempts}")
+        Log.d("!", "/")
+        Log.d("!", "Questions: ${DataManager.questions}")
+    }
 
-        when (difficulty) {
-            1 -> {
-                difficultyResult.text = "Easy"
-                difficultyResult.setTextColor(Color.parseColor("#90ee90"))
-            }
-            2 -> {
-                difficultyResult.text = "Medium"
-                difficultyResult.setTextColor(Color.parseColor("#FFA500"))
-            }
-            3 -> {
-                difficultyResult.text = "Hard"
-                difficultyResult.setTextColor(Color.parseColor("#FF0000"))
-            }
+    private fun resultProperties() {
+        percentAttemptsProperties()
+        pointResult.text = "Points: ${DataManager.points}"
+        attemptsText.text = "Failed attempts: ${DataManager.failedAttempts}"
+
+        when (DataManager.difficulty) {
+            1 -> difficultyResult.text = "Difficulty: Easy"
+            2 -> difficultyResult.text = "Difficulty: Medium"
+            3 -> difficultyResult.text = "Difficulty: Hard"
         }
 
-        when (subject) {
-            "+" -> subjectResult.text = "Addition"
-            "-" -> subjectResult.text = "Subtraction"
-            "*" -> subjectResult.text = "Multiplication"
-            "/" -> subjectResult.text = "Division"
+        when (DataManager.subject) {
+            "+" -> subjectResult.text = "Subject: addition"
+            "-" -> subjectResult.text = "Subject: Subtraction"
+            "*" -> subjectResult.text = "Subject: Multiplication"
+            "/" -> subjectResult.text = "Subject: Division"
         }
     }
 
-    private fun headerChanger() {
-        if (points <= 0) {
+    private fun titleChanger() {
+        if (DataManager.points <= 0) {
             goodOrBadText.text = "You did decent..."
         } else goodOrBadText.text = "You did great!"
     }
-
 }
