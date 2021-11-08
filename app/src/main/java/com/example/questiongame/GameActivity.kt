@@ -31,7 +31,7 @@ open class GameActivity : AppCompatActivity() {
         button = findViewById(R.id.button)
         toast = Toast(this)
 
-        gameTime = object : CountDownTimer(31000, 1000) { // Game time starts
+        gameTime = object : CountDownTimer(4000, 1000) { // Game time starts
             override fun onTick(millisUntilFinished: Long) {
                 clock.text = "${millisUntilFinished / 1000}" // Converts ms to sec
             }

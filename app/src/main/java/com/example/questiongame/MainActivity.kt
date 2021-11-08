@@ -2,9 +2,9 @@ package com.example.questiongame
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-
 open class MainActivity : AppCompatActivity() {
 
     lateinit var button1: Button
@@ -16,12 +16,14 @@ open class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d("!",">> Started")
 
         button1 = findViewById(R.id.button1)
         button2 = findViewById(R.id.button2)
         button3 = findViewById(R.id.button3)
         button4 = findViewById(R.id.button4)
         button5 = findViewById(R.id.button5)
+
 
         button1.setOnClickListener {
             DataManager.subject = 1
@@ -40,7 +42,7 @@ open class MainActivity : AppCompatActivity() {
             startDifficultyActivity()
         }
         button5.setOnClickListener {
-            DataManager.subject = (1..5).random()
+            DataManager.subject = (1..4).random()
             startDifficultyActivity()
         }
     }

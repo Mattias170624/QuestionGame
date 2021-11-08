@@ -3,9 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/ExozT/AndroidStudioProjects/QuestionGame/app/src/main/res/layout/activity_difficulty.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/ExozT/AndroidStudioProjects/QuestionGame/app/src/main/res/layout/activity_end_screen.xml" value="0.26875" />
-        <entry key="..\:/Users/ExozT/AndroidStudioProjects/QuestionGame/app/src/main/res/layout/activity_game.xml" value="0.29270833333333335" />
+        <entry key="..\:/Users/ExozT/AndroidStudioProjects/QuestionGame/app/src/main/res/layout/activity_difficulty.xml" value="0.25" />
+        <entry key="..\:/Users/ExozT/AndroidStudioProjects/QuestionGame/app/src/main/res/layout/activity_end_screen.xml" value="0.2875905797101449" />
+        <entry key="..\:/Users/ExozT/AndroidStudioProjects/QuestionGame/app/src/main/res/layout/activity_game.xml" value="0.33" />
+        <entry key="..\:/Users/ExozT/AndroidStudioProjects/QuestionGame/app/src/main/res/layout/activity_high_score_list.xml" value="0.24375" />
         <entry key="..\:/Users/ExozT/AndroidStudioProjects/QuestionGame/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/ExozT/AndroidStudioProjects/QuestionGame/app/src/main/res/layout/activity_main2.xml" value="0.29375" />
       </map>

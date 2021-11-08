@@ -1,6 +1,9 @@
 package com.example.questiongame
 
 import android.util.Log
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 object DataManager { // Saved user data throughout all activities
 
@@ -13,7 +16,6 @@ object DataManager { // Saved user data throughout all activities
     var failedAttempts: Int = 0
     var passedAttempts: Int = 0
     var questions: Int = 0
-
 
 
     fun difficultyProperties() {
@@ -52,7 +54,7 @@ object DataManager { // Saved user data throughout all activities
                     number1 = (7..15).random()
                     number2 = (7..15).random()
                 } else {
-                    number1 = ((4..(90) / 2).random() * 2)
+                    number1 = ((4..(90) / 2).random() * 2) // Even number
                     primeNumberMaker()
                 }
             }
@@ -68,18 +70,17 @@ object DataManager { // Saved user data throughout all activities
         }
     }
 
-    private fun primeNumberMaker() {
-
+    private fun primeNumberMaker() { // Random primenumber of number1 = value of number2
         val listNum = mutableListOf<Int>()
         for (num in 2..number1 / 2) {
             if (number1 % num == 0) {
                 listNum.add(num)
-                number2 = listNum.random()
             }
+            number2 = listNum.random()
         }
     }
 
-    fun wipeData() { // Sets all
+    fun wipeData() { // Sets userdata to 0
         passedAttempts = 0
         failedAttempts = 0
         questions = 0
@@ -87,6 +88,7 @@ object DataManager { // Saved user data throughout all activities
 
         Log.d("!", "$failedAttempts $questions $points")
     }
+
 }
 
 
