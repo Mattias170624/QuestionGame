@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+
 open class MainActivity : AppCompatActivity() {
 
     lateinit var button1: Button
@@ -16,7 +17,7 @@ open class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.d("!",">> Started")
+        Log.d("!", ">> Started")
 
         button1 = findViewById(R.id.button1)
         button2 = findViewById(R.id.button2)

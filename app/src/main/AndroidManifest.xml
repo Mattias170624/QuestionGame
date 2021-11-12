@@ -10,22 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuestionGame">
         <activity
-            android:name=".HighScoreListActivity"
-            android:exported="false" />
-        <activity
             android:name=".EndScreenActivity"
             android:exported="true" />
         <activity
             android:name=".GameActivity"
             android:exported="true" />
         <activity
-            android:name=".MainActivity2"
-            android:exported="true" />
-        <activity
             android:name=".DifficultyActivity"
-            android:exported="true" />
-        <activity
-            android:name=".Difficulty_Activity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

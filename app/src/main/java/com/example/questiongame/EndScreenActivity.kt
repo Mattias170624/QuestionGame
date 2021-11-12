@@ -9,7 +9,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.room.Room
 import kotlinx.coroutines.*
-import kotlin.math.roundToInt
 
 class EndScreenActivity : AppCompatActivity() {
 
@@ -25,6 +24,7 @@ class EndScreenActivity : AppCompatActivity() {
     lateinit var playAgainButton: Button
     lateinit var myHighScore: Button
     lateinit var addHighScore: Button
+    lateinit var removeDataButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +44,7 @@ class EndScreenActivity : AppCompatActivity() {
         playAgainButton = findViewById(R.id.playAgainButton)
         myHighScore = findViewById(R.id.myHighScore)
         addHighScore = findViewById(R.id.addHighScore)
+        removeDataButton = findViewById(R.id.removeDataButton)
 
         titleChanger() // Changes title based on point value
         resultProperties()
@@ -55,9 +56,6 @@ class EndScreenActivity : AppCompatActivity() {
         }
 
         addHighScore.setOnClickListener {
-
-             //GlobalScope.launch { db.clearAllTables() }
-
             if (!hasAdded) {
                 val item = HighScore(0,
                     "${DataManager.points}",
@@ -69,10 +67,12 @@ class EndScreenActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Highscore already added!", Toast.LENGTH_SHORT).show()
             }
+        }
 
-
-
-
+        removeDataButton.setOnClickListener {
+            // Deletes all high scores in the table
+            GlobalScope.launch { db.clearAllTables() }
+            Toast.makeText(this, "Deleted all your scores.", Toast.LENGTH_SHORT).show()
         }
 
         myHighScore.setOnClickListener {
@@ -84,8 +84,6 @@ class EndScreenActivity : AppCompatActivity() {
                 }
             }
         }
-
-
     }
 
     fun saveItem(highScore: HighScore) {
@@ -102,12 +100,6 @@ class EndScreenActivity : AppCompatActivity() {
         GlobalScope.async(Dispatchers.IO) {
             db.highScoreDao().findByCategory(category)
         }
-
-    fun delete(highScore: HighScore) =
-        GlobalScope.launch(Dispatchers.IO) {
-            db.highScoreDao().delete(highScore)
-        }
-
 
     private fun percentAttemptsProperties() { // Success rate calculator
         val percentNum = (DataManager.passedAttempts).toDouble() / (DataManager.questions) * 100
